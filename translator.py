@@ -14,7 +14,7 @@ LANGUAGES = {
     'ar': 'Arabic', 'bn': 'Bengali', 'zh-cn': 'Chinese (Simplified)',
     'en': 'English', 'fr': 'French', 'de': 'German', 'hi': 'Hindi',
     'it': 'Italian', 'ja': 'Japanese', 'ko': 'Korean',
-    'es': 'Spanish', 'sv': 'Swedish'
+    'es': 'Spanish', 'sv': 'Swedish', 'en': 'English'
 }
 
 @app.post("/translate")
