@@ -1,9 +1,8 @@
 package com.example._ThSem_Project.controller;
 
 
-import com.example._ThSem_Project.dto.UserStatsResponse;
 import com.example._ThSem_Project.dto.quizDto.QuizDto;
-import com.example._ThSem_Project.dto.quizDto.QuizRequest;
+import com.example._ThSem_Project.dto.quizDto.QuizSubmissionRequest;
 import com.example._ThSem_Project.dto.quizDto.QuizSubmissionResponse;
 import com.example._ThSem_Project.services.QuizService;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +20,17 @@ public class QuizModelController {
 
     @GetMapping
     public ResponseEntity<List<QuizDto>> generateLanguageQuiz(
-            @RequestBody QuizRequest request){
-        return ResponseEntity.ok(quizService.generateQuestions(request.language(), request.topic(), request.level() , request.noOfQuestion()));
+            @RequestParam String language,
+            @RequestParam String topic,
+            @RequestParam String level,
+            @RequestParam Integer noOfQuestion){
+        return ResponseEntity.ok(quizService.generateQuestions(language , topic , level , noOfQuestion));
     }
 
-    @PostMapping("/submit")
-    public ResponseEntity<UserStatsResponse> submitAnswer(@RequestBody QuizSubmissionResponse response){
-        return ResponseEntity.ok(quizService.submitAnswer(response));
+    @PutMapping("/submit")
+    public ResponseEntity<QuizSubmissionResponse> submitAnswer(
+            @RequestBody QuizSubmissionRequest response
+    ){
+        return ResponseEntity.ok(quizService.submitAnswer(response.questionId(),  response.selectedAnswer()));
     }
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/translate")
+@RequestMapping("/api/translate")
 public class TranslatorController {
 
     private  final TranslatorService translatorService;

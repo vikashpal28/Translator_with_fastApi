@@ -34,7 +34,6 @@ public class AuthController {
    }
 
    @GetMapping("/me")
-
     public ResponseEntity<UserProfileResponse> getProfile(@AuthenticationPrincipal JwtUserPrincipal user){
        Long userId = user.userId();
        return ResponseEntity.ok(userServices.getProfile(userId));
