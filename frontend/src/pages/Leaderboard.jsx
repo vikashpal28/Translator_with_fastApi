@@ -75,7 +75,7 @@ export const Leaderboard = () => {
                       <div className="flex items-center gap-3 mt-0.5">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Player Profile</span>
                         <span className="text-orange-500 text-xs font-black flex items-center gap-1">
-                          🔥 {player.currentStreak} Day Streak
+                          🔥 {player.currentStreak}  Streak
                         </span>
                       </div>
                     </div>
