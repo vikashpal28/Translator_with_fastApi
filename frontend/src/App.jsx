@@ -12,6 +12,7 @@ import { Feedback } from "./pages/Feedback";
 import { Chat } from "./pages/Chat";
 import { About } from "./pages/About";
 import { Contact } from "./pages/Contact";
+import { Leaderboard } from "./pages/Leaderboard";
 
 const route = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ const route = createBrowserRouter([
           {
             path:"/contact",
             element:<Contact/>
+          },
+          {
+            path:"/leaderboard",
+            element:<Leaderboard/>
           }
         ],
       },

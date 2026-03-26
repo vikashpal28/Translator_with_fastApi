@@ -1,9 +1,6 @@
 package com.example._ThSem_Project.controller;
 
-import com.example._ThSem_Project.dto.AuthResponse;
-import com.example._ThSem_Project.dto.LoginRequest;
-import com.example._ThSem_Project.dto.SignUpRequest;
-import com.example._ThSem_Project.dto.UserProfileResponse;
+import com.example._ThSem_Project.dto.*;
 import com.example._ThSem_Project.security.JwtUserPrincipal;
 import com.example._ThSem_Project.services.AuthServices;
 import com.example._ThSem_Project.services.UserServices;
@@ -14,6 +11,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @FieldDefaults(makeFinal = true , level = AccessLevel.PRIVATE)
@@ -37,5 +36,10 @@ public class AuthController {
     public ResponseEntity<UserProfileResponse> getProfile(@AuthenticationPrincipal JwtUserPrincipal user){
        Long userId = user.userId();
        return ResponseEntity.ok(userServices.getProfile(userId));
+   }
+
+   @GetMapping("/leaderboard")
+    public ResponseEntity<List<LeaderboardResponse>> getLeaderboard(){
+       return ResponseEntity.ok(userServices.getLeaderboard());
    }
 }

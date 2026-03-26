@@ -1,5 +1,6 @@
 package com.example._ThSem_Project.services.impl;
 
+import com.example._ThSem_Project.dto.LeaderboardResponse;
 import com.example._ThSem_Project.dto.UserProfileResponse;
 import com.example._ThSem_Project.entity.User;
 import com.example._ThSem_Project.error.ResourceNotFoundException;
@@ -10,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,11 @@ public class UserServiceImpl implements UserServices  , UserDetailsService {
           return  new UserProfileResponse(user.getId() , user.getUsername() , user.getName() , user.getScore() , user.getCurrentStreak() , user.getLongestStreak());
         }
         return  null;
+    }
+
+    @Override
+    public List<LeaderboardResponse> getLeaderboard() {
+        return userRepository.getAllUsersByScore();
     }
 
     @Override

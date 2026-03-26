@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
 from groq import Groq
 
 # 1. Get your FREE key at https://console.groq.com/keys
-client = Groq(api_key="xai-1GDo1CZAUiGBxh15m2dUGD6DFIs6EshoBtasuZ6Juto6oycFBUvCPXHeSdKDDEr39dyoL07qNSVXKr61")
+client = Groq(api_key="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")
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 # 2. Optimized Prompt Variable
 SYSTEM_PROMPT = """

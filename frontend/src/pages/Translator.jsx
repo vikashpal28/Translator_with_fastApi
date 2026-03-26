@@ -4,7 +4,8 @@ import axios from "axios";
 export const Translator = () => {
   const [text, setText] = useState("");
   const [translated, setTranslated] = useState("");
-  const [language, setLanguage] = useState("es"); // default Spanish
+  const [language, setLanguage] = useState("es");
+  const [isTranslating, setIsTranslating] = useState(false);
   const token = localStorage.getItem("token");
 
   const LANGUAGES = {
@@ -22,13 +23,18 @@ export const Translator = () => {
     ur: "Urdu", vi: "Vietnamese",
   };
 
+  const handleCopy = () => {
+    if (translated) {
+      navigator.clipboard.writeText(translated);
+      alert("Copied to clipboard!");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!text.trim()) {
-      alert("Please enter text to translate.");
-      return;
-    }
+    if (!text.trim()) return;
 
+    setIsTranslating(true);
     try {
       const response = await axios.post(
         "http://localhost:8080/api/translate/response",
@@ -40,67 +46,103 @@ export const Translator = () => {
           },
         }
       );
-      // console.log(response);
-     
       setTranslated(response.data.translate);
-      //  console.log(translated);
     } catch (error) {
       console.error("Translation error:", error);
-      alert("Something went wrong. Please try again.");
+      alert("Translation failed. Check your connection.");
+    } finally {
+      setIsTranslating(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 px-6 py-12">
-      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-4xl">
-        <h1 className="text-2xl md:text-3xl font-bold text-center text-indigo-700 mb-6">
-          Translator Section
-        </h1>
+    <div className="min-h-screen bg-[#020617] text-slate-200 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      {/* Background Decorative Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-96 bg-indigo-600/10 blur-[120px] pointer-events-none"></div>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Input Box */}
-          <div className="flex flex-col space-y-3">
-            <div
-              disabled
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              <option >Write The Text Here</option>
+      <div className="w-full max-w-5xl z-10">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-black text-white tracking-tight mb-3">
+            Universal <span className="text-indigo-400">Translator</span>
+          </h1>
+          <p className="text-slate-400">Break barriers and expand your vocabulary instantly.</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 relative">
+          
+          {/* Input Panel */}
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
+            <div className="flex justify-between items-center mb-4 px-2">
+              <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Source: Auto-Detect</span>
+              <button 
+                onClick={() => setText("")}
+                className="text-xs text-slate-500 hover:text-white transition-colors"
+              >
+                Clear
+              </button>
             </div>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Enter text..."
-              rows="6"
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Type or paste text here..."
+              className="w-full h-64 bg-transparent text-xl text-white placeholder:text-slate-600 resize-none outline-none custom-scrollbar"
             />
           </div>
 
-          {/* Output Box */}
-          <div className="flex flex-col space-y-3">
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              {Object.entries(LANGUAGES).map(([code, name]) => (
-                <option key={code} value={code}>
-                  {name}
-                </option>
-              ))}
-            </select>
-            <div className="border border-gray-300 rounded-lg px-4 py-2 bg-gray-100 h-[160px]">
-              {translated ? <p>{translated}</p> : <p>Translation will appear here...</p>}
+          {/* Central Action Icon (Desktop only) */}
+          <div className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-indigo-600 rounded-full items-center justify-center shadow-lg border-4 border-[#020617]">
+             <span className="text-white text-xl">⇄</span>
+          </div>
+
+          {/* Output Panel */}
+          <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-6 shadow-xl backdrop-blur-sm">
+            <div className="flex justify-between items-center mb-4 px-2">
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="bg-transparent text-xs font-bold uppercase tracking-widest text-indigo-400 outline-none cursor-pointer hover:text-indigo-300"
+              >
+                {Object.entries(LANGUAGES).map(([code, name]) => (
+                  <option key={code} value={code} className="bg-slate-900 text-white">
+                    Target: {name}
+                  </option>
+                ))}
+              </select>
+              {translated && (
+                <button 
+                  onClick={handleCopy}
+                  className="text-xs text-slate-500 hover:text-white transition-colors flex items-center gap-1"
+                >
+                  <span>📋</span> Copy
+                </button>
+              )}
+            </div>
+            <div className="w-full h-64 text-xl text-indigo-100 overflow-y-auto custom-scrollbar">
+              {isTranslating ? (
+                <div className="flex items-center gap-2 text-slate-500 animate-pulse">
+                   <span>Translating...</span>
+                </div>
+              ) : translated ? (
+                <p className="leading-relaxed">{translated}</p>
+              ) : (
+                <p className="text-slate-600 italic">Translation will appear here...</p>
+              )}
             </div>
           </div>
-        </form>
+        </div>
 
-        <div className="flex justify-center mt-6">
+        {/* Submit Button */}
+        <div className="flex justify-center mt-10">
           <button
-            type="submit"
             onClick={handleSubmit}
-            className="bg-amber-400 hover:bg-amber-500 text-black font-semibold px-6 py-2 rounded-lg shadow-md transition transform hover:scale-105"
+            disabled={isTranslating}
+            className="group relative px-12 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black rounded-2xl shadow-xl shadow-indigo-900/40 transition-all transform active:scale-95 overflow-hidden"
           >
-            Translate
+            <span className="relative z-10 flex items-center gap-2">
+              {isTranslating ? "PROCESSING..." : "ACTIVATE TRANSLATION"}
+              {!isTranslating && <span className="group-hover:translate-x-1 transition-transform">→</span>}
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
           </button>
         </div>
       </div>
