@@ -2,7 +2,6 @@ package com.example._ThSem_Project.security;
 
 
 import com.example._ThSem_Project.entity.User;
-import com.example._ThSem_Project.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -21,8 +20,6 @@ import java.util.Date;
 @Slf4j
 @RequiredArgsConstructor
 public class AuthUtil {
-    private final UserRepository userRepository;
-
 
     @Value("${jwt.secret-key}")
     private String jwtSecretKey;
